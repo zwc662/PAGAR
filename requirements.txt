@@ -1,4 +1,4 @@
-Cython
+Cython==0.29.32
 absl-py==0.13.0
 aiohttp==3.8.3
 aiosignal==1.2.0
@@ -19,7 +19,6 @@ charset-normalizer==2.0.12
 click==8.0.4
 cloudpickle==1.2.2
 cycler==0.11.0
-Cython==0.29.32
 dataclasses==0.8
 datasets==2.4.0
 dill==0.3.4
