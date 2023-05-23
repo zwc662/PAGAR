@@ -161,7 +161,7 @@ class DiscModel(nn.Module, torch_pairl.RecurrentDiscModel):
         self.disc = nn.Sequential(
             nn.Linear(self.z_size, 64),
             nn.Tanh(),
-            nn.Linear(64, 1)#action_space.n)
+            nn.Linear(64, action_space.n)
         )
 
         # Initialize parameters correctly
@@ -201,14 +201,14 @@ class DiscModel(nn.Module, torch_pairl.RecurrentDiscModel):
         x = self.disc(z)
         
                 
-        if self.output_z:
-            return nn.functional.sigmoid(x), memory, mu, logvar
-        else:
-            return nn.functional.sigmoid(x), memory
-        #dist = Categorical(logits=F.log_softmax(x, dim=1))
         #if self.output_z:
-        #    return dist.log_prob(action).exp().diag().unsqueeze(-1), memory, mu, logvar
-        #return dist.log_prob(action).exp().diag(), memory
+        #    return nn.functional.sigmoid(x), memory, mu, logvar
+        #else:
+        #    return nn.functional.sigmoid(x), memory
+        dist = Categorical(logits=F.log_softmax(x, dim=1))
+        if self.output_z:
+            return dist.log_prob(action).exp().diag().unsqueeze(-1), memory, mu, logvar
+        return dist.log_prob(action).exp().diag(), memory
  
     def reparameterize(self, mu, logvar):
         std = torch.exp(logvar/2)
