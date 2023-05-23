@@ -1,8 +1,14 @@
 # syntax=docker/dockerfile:1
 
 FROM python:3.6.9-slim-buster
+
 WORKDIR /
-COPY requirements.txt requirements.txt
-RUN pip3 install -r requirements.txt
+
 COPY . .
-CMD ["python3", "-m" , "flask", "run", "--host=0.0.0.0"]
+
+RUN export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${PWD}/mujoco210/bin/
+RUN export MUJOCO_PY_MUJOCO_PATH=${PWD}/mujoco210 
+RUN pip3 install -r requirements.txt
+
+ENTRYPOINT ["/file.sh"]
+ 

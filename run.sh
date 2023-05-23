@@ -1,6 +1,8 @@
+#!/bin/bash
 env=$1
 task=$2
 alg=$3
+echo Your container args are: "$@"
 
 cd $env
 cd $alg
