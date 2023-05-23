@@ -230,7 +230,7 @@ if __name__ == "__main__":
             csv_file.flush()
 
             for field, value in zip(header, data):
-                tb_writer.add_scalar(field, value, num_frames)
+                tb_writer.add_scalar('iq_learn', field, value, num_frames)
 
         # Save status
 
