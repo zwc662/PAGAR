@@ -4,6 +4,7 @@ FROM python:3.6.9
 
 RUN apt-get update -q \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    patchelf \
     gcc \
     curl \
     git \
