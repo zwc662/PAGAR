@@ -233,8 +233,8 @@ if __name__ == "__main__":
             csv_logger.writerow(data)
             csv_file.flush()
 
-            for field, value in zip(header, data):
-                tb_writer.add_scalar(field, value, num_frames)
+            #for field, value in zip(header, data):
+            tb_writer.add_scalar(return_per_episode[0], num_frames)
 
         # Save status
 
