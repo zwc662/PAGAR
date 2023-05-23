@@ -1,4 +1,4 @@
-# Let's do Inverse RL
+# Imitation Learning w/ PAGAR
 
 ## Introduction
 
