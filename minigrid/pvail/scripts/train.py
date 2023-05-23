@@ -332,8 +332,8 @@ if __name__ == "__main__":
             csv_logger.writerow(data)
             csv_file.flush()
 
-            tb_writer.add_scalar('protagonist_vail', info['protagonist_num_frames'], info["protagonist_rreturn_mean"])
-            tb_writer.add_scalar('antagonist_vail', info['antagonist_num_frames'], info["antagonist_rreturn_mean"])
+            tb_writer.add_scalar('protagonist_vail', info["protagonist_rreturn_mean"], info['protagonist_num_frames'], )
+            tb_writer.add_scalar('antagonist_vail', info["antagonist_rreturn_mean"] , info['antagonist_num_frames'])
         # Save status
 
         if args.save_interval > 0 and update % args.save_interval == 0:
