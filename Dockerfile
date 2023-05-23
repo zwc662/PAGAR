@@ -2,6 +2,25 @@
 
 FROM python:3.6.9
 
+RUN apt-get update -q \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    gcc \
+    curl \
+    git \
+    libgl1-mesa-dev \
+    libgl1-mesa-glx \
+    libglew-dev \
+    libosmesa6-dev \
+    software-properties-common \
+    net-tools \
+    vim \
+    virtualenv \
+    wget \
+    xpra \
+    xserver-xorg-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /
 
 COPY . .
