@@ -202,7 +202,7 @@ def main():
         protagonist_score_avg = np.mean(protagonist_scores)
         protagonist_score_avgs.append(protagonist_score_avg)
         print('{}::{}:: {} protagonist_episode score is {:.2f}'.format(args.env_name, iter, protagonist_episodes, protagonist_score_avg))
-        writer.add_scalar(f'log/{args.env_name}_pgail_protagonist_score', float(protagonist_score_avg), iter)
+        writer.add_scalar(f'log/{args.env_name}_protagonist_gail_avg_return', float(protagonist_score_avg), iter)
 
         
         antagonist_actor.eval(), antagonist_critic.eval()
@@ -250,7 +250,7 @@ def main():
         antagonist_score_avg = np.mean(antagonist_scores)
         antagonist_score_avgs.append(antagonist_score_avg)
         print('{}::{}:: {} antagonist_episode score is {:.2f}'.format(args.env_name, iter, antagonist_episodes, antagonist_score_avg))
-        writer.add_scalar(f'log/{args.env_name}_pgail_antagonist_score', float(antagonist_score_avg), iter)
+        writer.add_scalar(f'log/{args.env_name}_antagonist_gail_avg_return', float(antagonist_score_avg), iter)
 
         
         

@@ -400,7 +400,7 @@ class PVAILAlgo(BaseAlgo):
                 # Update actor-critic
 
                 self.disc_optimizer.zero_grad()
-                self.pair_coef = self.pair_coef * np.exp((- batch_irl_loss.detach().cpu().numpy().item() + 1.))
+                #self.pair_coef = self.pair_coef * np.exp((- batch_irl_loss.detach().cpu().numpy().item() + 1.))
                 (batch_pair_loss * self.pair_coef + batch_irl_loss).backward()
                 grad_norm = sum(p.grad.data.norm(2).item() ** 2 for p in self.discmodel.parameters()) ** 0.5
                 clip_grad_value(self.discmodel.parameters(), self.max_grad_norm)

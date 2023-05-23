@@ -10,8 +10,7 @@ from torch_irl.algos.base import BaseAlgo
  
 
 class GAILAlgo(BaseAlgo):
-    """The Proximal Policy Optimization algorithm
-    ([Schulman et al., 2015](https://arxiv.org/abs/1707.06347))."""
+     
 
     def __init__(self, envs, acmodel, discmodel, device=None, num_frames_per_proc=None, discount=0.99, lr=0.001, gae_lambda=0.95,
                  entropy_coef=0.01, value_loss_coef=0.5, max_grad_norm=0.5, ac_recurrence=4, disc_recurrence = 4,

@@ -209,7 +209,7 @@ def main():
         protagonist_score_avg = np.mean(protagonist_scores)
         protagonist_score_avgs.append(protagonist_score_avg)
         print('{}::{}:: {} protagonist_episode score is {:.2f}'.format(args.env_name, iter, protagonist_episodes, protagonist_score_avg))
-        writer.add_scalar(f'log/{args.env_name}_pvail_protagonist_score', float(protagonist_score_avg), iter)
+        writer.add_scalar(f'log/{args.env_name}_protagonist_vail_avg_return', float(protagonist_score_avg), iter)
 
         
         antagonist_actor.eval(), antagonist_critic.eval()
@@ -257,7 +257,7 @@ def main():
         antagonist_score_avg = np.mean(antagonist_scores)
         antagonist_score_avgs.append(antagonist_score_avg)
         print('{}::{}:: {} antagonist_episode score is {:.2f}'.format(args.env_name, iter, antagonist_episodes, antagonist_score_avg))
-        writer.add_scalar(f'log/{args.env_name}_pvail_antagonist_score', float(antagonist_score_avg), iter)
+        writer.add_scalar(f'log/{args.env_name}_antagonist_vail_avg_return', float(antagonist_score_avg), iter)
 
         
         
@@ -292,6 +292,8 @@ def main():
                 elif 'Hopper' in args.env_name:
                     args.irl_coef = 1000 #min(1.e3, max(5.e-3, args.irl_coef * ((.5 * (likelihood_loss.detach() - 1.3)).exp().cpu().numpy().item())))
                     #reward_function_optim = optim.Adam(reward_function.parameters(), lr=args.learning_rate)
+                else:
+                    args.irl_coef = 1000 
                 #print("Reset Adam")
             else:
                 args.pair_coef = pair_coef
