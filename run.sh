@@ -6,10 +6,10 @@ echo Your container args are: "$@"
 
 cd $env
 cd $alg
-tensorboard --logdir $env/$alg/logs &
 
 if [ $env == 'minigrid' ];
 then 
+    tensorboard --logdir scripts/logs &
     if [ $task != 'MiniGrid-DoorKey-6x6-v0' ];
     then
         python -m scripts.train --env $task --no-cuda --entropy
@@ -18,6 +18,7 @@ then
     fi
     #tensorboard --logdir ./logs 
 else
+    tensorboard --logdir logs &
     python main.py --env_name $task
     #tensorboard --logdir ./logs 
 fi

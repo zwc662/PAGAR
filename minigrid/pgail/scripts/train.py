@@ -106,7 +106,7 @@ if __name__ == "__main__":
     if not os.path.isdir(logdir):
         os.makedirs(logdir)
     tb_writer = tensorboardX.SummaryWriter(logdir)
-
+    
     # Log command and all script arguments
 
     txt_logger.info("{}\n".format(" ".join(sys.argv)))
