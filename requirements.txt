@@ -38,7 +38,7 @@ google-pasta==0.2.0
 grpcio==1.38.1
 gym==0.17.2
 gym-minigrid==1.0.1
-gym-super-mario-bros==7.3.0
+#gym-super-mario-bros==7.3.0
 h5py==3.1.0
 #huggingface-hub==0.4.0
 Hydra==2.5

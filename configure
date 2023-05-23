@@ -1,0 +1,17 @@
+apt-get update
+apt-get install make build-essential
+wget https://repo.anaconda.com/archive/Anaconda3-2023.03-Linux-x86_64.sh
+bash Anaconda3-2023.03-Linux-x86_64.sh
+export PATH=$PATH:$CONDA_PREFIX/bin/
+conda init
+ 
+ 
+wget https://mujoco.org/download/mujoco210-linux-x86_64.tar.gz
+tar -xvzf mujoco210-linux-x86_64.tar.gz
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${PWD}/mujoco210/bin/
+export MUJOCO_PY_MUJOCO_PATH=${PWD}/mujoco210 
+echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${PWD}/mujoco210/bin/" >> ~/.bashrc
+echo "export MUJOCO_PY_MUJOCO_PATH=${PWD}/mujoco210" >> ~/.bashrc
+source ~/.bashrc
+
+
