@@ -9,9 +9,9 @@ cd $alg
  
 if [ $env == 'minigrid' ]
 then 
-    python -m scripts.train --env $task &
+    python -m scripts.train --env $task --no-cuda &
     tensorboard --logdir ./logs
 else
-    python main.py --env_name $task
+    python main.py --env_name $task &
     tensorboard --logdir ./logs
 fi

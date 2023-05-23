@@ -10,5 +10,6 @@ RUN export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${PWD}/mujoco210/bin/
 RUN export MUJOCO_PY_MUJOCO_PATH=${PWD}/mujoco210 
 RUN pip3 install -r requirements.txt
 EXPOSE      6006
-ENTRYPOINT ["bash run.sh"]
+ENTRYPOINT ["/run.sh"]
+CMD ["mujoco", "Hopper-v2", "pgail"]
  
