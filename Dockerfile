@@ -5,7 +5,7 @@ FROM python:3.6.9
 WORKDIR /
 
 COPY . .
-RUN mkdir ~/.mujoco
+RUN mkdir /root/.mujoco
 RUN mkdir /.mujoco
 COPY mujoco210 /root/.mujoco/
 COPY mujoco210 /.mujoco/ 
