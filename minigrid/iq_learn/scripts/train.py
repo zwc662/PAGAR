@@ -97,7 +97,10 @@ if __name__ == "__main__":
 
     txt_logger = utils.get_txt_logger(model_dir)
     csv_file, csv_logger = utils.get_csv_logger(model_dir)
-    tb_writer = tensorboardX.SummaryWriter(model_dir)
+    logdir = os.path.join(os.path.dirname(__file__), 'logs')
+    if not os.path.isdir(logdir):
+        os.makedirs(logdir)
+    tb_writer = tensorboardX.SummaryWriter(logdir)
 
     # Log command and all script arguments
 
