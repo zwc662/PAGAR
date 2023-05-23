@@ -9,5 +9,4 @@ then
     python -m scripts.train --env $task
 else
     python main.py --env_name $task
-end
-    
+fi
