@@ -148,7 +148,7 @@ def main():
 
         print("Loaded OK ex. Zfilter N {}".format(running_state.rs.n))
 
-    saved_log_path = os.path.join(args.logdir, timestamp)
+    saved_log_path = args.logdir
     writer = SummaryWriter(saved_log_path)
     
     protagonist_episodes = 0
