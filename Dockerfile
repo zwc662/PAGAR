@@ -5,6 +5,7 @@ FROM python:3.6.9
 WORKDIR /
 
 COPY . .
+COPY mujoco210 /root/.mujoco/mujoco210
  
 RUN export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${PWD}/mujoco210/bin/
 RUN echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${PWD}/mujoco210/bin/" >> ~/.bashrc
