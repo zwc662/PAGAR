@@ -2,14 +2,7 @@
 
 FROM python:3.6.9
 
-RUN apt-get update
-RUN apt-get install -y apt-utils
-RUN apt-get install -y software-properties-common
-RUN add-apt-repository ppa:deadsnakes/ppa
-RUN apt-get install -y gnupg2
-RUN apt-get update
-RUN apt-get install -y libosmesa6-dev libgl1-mesa-glx libglfw3
-
+ 
 RUN apt-get update -q \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     patchelf \
