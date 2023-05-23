@@ -11,12 +11,12 @@ if [ $env == 'minigrid' ];
 then 
     if [$task != 'MiniGrid-DoorKey-6x6-v0'];
     then
-        python -m scripts.train --env $task --no-cuda --entropy&
+        python -m scripts.train --env $task --no-cuda --entropy
     else
-        python -m scripts.train --env $task --no-cuda &
+        python -m scripts.train --env $task --no-cuda
     fi
-    tensorboard --logdir ./logs 
+    #tensorboard --logdir ./logs 
 else
-    python main.py --env_name $task &
-    tensorboard --logdir ./logs 
+    python main.py --env_name $task
+    #tensorboard --logdir ./logs 
 fi
