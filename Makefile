@@ -1,4 +1,4 @@
-VENV=venv
+VENV=neurips2023
 # Recommended for universal compatibility ${CUDA_VERSION}=11.6.0
 ifndef CUDA_VERSION
 CUDA_VERSION=11.6.0
