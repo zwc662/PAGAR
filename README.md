@@ -8,12 +8,14 @@ This repository contains PyTorch (v0.4.1) implementations of **Imitation Learnin
 * Docker build (Recommended)
    * Install [Docker](https://docs.docker.com/get-docker/)
    * Download docker image tar file from (https://drive.google.com/file/d/15mpNuIkEMhgD5y8SVfQVfe8t5VnaTKL4/view?usp=share_link)
+   * Run `docker load --input pagar.tar` to load the docker image.
 * Local build
    * Install [Mujoco](https://github.com/openai/mujoco-py)
    * Install other dependencies `pip install -r requirements.txt`
   
 ### 3. Run Algorithm 
 * (If using docker) Run `sudo docker run -it -p 6006:6006 --entrypoint /bin/bash pagar` to open docker's shell.
+   * `pagar` is the docker image's name. If the loaded image's name is not `pagar`, please use the name of the loaded image's name
 * Set the following environment variables by `export VARIABLE_NAME=VARIABLE_VALUE`
    * `ENV`: specifies the benchmark environment; its variable value can be `minigrid` or `mujoco`
    * `TASK`:  specifies the task
