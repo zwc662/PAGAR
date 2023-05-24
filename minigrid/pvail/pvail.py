@@ -388,7 +388,7 @@ class PVAILAlgo(BaseAlgo):
                     pair_loss0 =  (r * ratio)[ratio < 0]
                     pair_loss0 = - pair_loss0[torch.isfinite(pair_loss0)].log().mean().exp()
                     
-                    pair_loss = pair_loss1 + pair_loss2 + (pair_loss3 if torch.isfinite(pair_loss3).all() else 0.) + (pair_loss4 if torch.isfinite(pair_loss4).all() else 0.) 
+                    pair_loss = pair_loss1 + pair_loss2 #+ (pair_loss3 if torch.isfinite(pair_loss3).all() else 0.) + (pair_loss4 if torch.isfinite(pair_loss4).all() else 0.) 
                     #print(pair_loss1, pair_loss2, pair_loss3, pair_loss0)
                     batch_pair_loss += pair_loss
             
@@ -400,7 +400,7 @@ class PVAILAlgo(BaseAlgo):
                 # Update actor-critic
 
                 self.disc_optimizer.zero_grad()
-                self.pair_coef = self.pair_coef * np.exp((- batch_irl_loss.detach().cpu().numpy().item() + 1.))
+                #self.pair_coef = self.pair_coef * np.exp((- batch_irl_loss.detach().cpu().numpy().item() + 1.))
                 (batch_pair_loss * self.pair_coef + batch_irl_loss).backward()
                 grad_norm = sum(p.grad.data.norm(2).item() ** 2 for p in self.discmodel.parameters()) ** 0.5
                 clip_grad_value(self.discmodel.parameters(), self.max_grad_norm)
