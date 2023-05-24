@@ -363,7 +363,7 @@ class PGAILAlgo(BaseAlgo):
                     pair_loss0 =  (r * ratio)[ratio < 0]
                     pair_loss0 = - pair_loss0[torch.isfinite(pair_loss0)].log().mean().exp()
                     
-                    pair_loss = pair_loss1 + pair_loss2 + (pair_loss3 if torch.isfinite(pair_loss3).all() else 0.) + (pair_loss4 if torch.isfinite(pair_loss4).all() else 0.) 
+                    pair_loss = pair_loss1 + pair_loss2 + (pair_loss3 if torch.isfinite(pair_loss3).all() else 0.) #+ (pair_loss4 if torch.isfinite(pair_loss4).all() else 0.) 
                     #print(pair_loss1, pair_loss2, pair_loss3, pair_loss0)
                     batch_pair_loss += pair_loss
             
