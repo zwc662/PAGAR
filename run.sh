@@ -9,6 +9,7 @@ cd $alg
 
 if [ $env == 'minigrid' ];
 then 
+    mkdir scripts/logs
     tensorboard --logdir scripts/logs &
     if [ $task != 'MiniGrid-DoorKey-6x6-v0' ];
     then
