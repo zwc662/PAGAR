@@ -32,3 +32,4 @@ mujoco/plots/run-.-tag-log_Swimmer-v2_gail_score.csv
 minigrid/plots/MiniGrid-SimpleCrossingS9N1-v0-gail_sigmoid.csv
 minigrid/plots/MiniGrid-SimpleCrossingS9N1-v0-pgail_categ.csv
 minigrid/plots/MiniGrid-SimpleCrossingS9N1-v0-gail_sigmoid.csv
+mujoco210
