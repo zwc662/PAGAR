@@ -1,54 +1,29 @@
 # Imitation Learning w/ PAGAR
 
-## Introduction
+### 1. Introduction
 
 This repository contains PyTorch (v0.4.1) implementations of **Imitation Learning with Protagonist Antagonist Guided Adversarial Reward (PAGAR)** algorithms.
  
 ### 2. Installation
-
-* Install [Mujoco](https://github.com/openai/mujoco-py)
-* Install [MiniGrid](https://github.com/Farama-Foundation/Minigrid/tree/gym-minigrid-legacy)
+* Docker build (Recommended)
+   * Install [Docker](https://docs.docker.com/get-docker/)
+   * Download docker image tar file from (https://drive.google.com/file/d/15mpNuIkEMhgD5y8SVfQVfe8t5VnaTKL4/view?usp=share_link)
+* Local build
+   * Install [Mujoco](https://github.com/openai/mujoco-py)
+   * Install other dependencies `pip install -r requirements.txt`
   
-### 3. Train & Test
-
-#### MiniGrid
-
-* Run GAIL w/ PAGAR to obtain `Protagonist_GAIL`
-
-   * Navigate to [minigrid/pgail-starter-files](https://github.com/zwc662/PAGAR/tree/main/minigrid/pgail-starter-files) folder.
- 
-* Or run VAIL w/ PAGAR to obtain `Protagonist_GAIL`
-
-   * Navigate to [minigrid/pvail-starter-files](https://github.com/zwc662/PAGAR/tree/main/minigrid/pvail-starter-files) folder.
-
-* Run the following command with $ENV_NAME being `MiniGrid-DoorKey6x6-v0` or `Minigrid-SimpleCrossingS9N1/2/3-v0`
-
-   ~~~
-   python -m scripts.train --env $ENV_NAME --no-cuda
-   ~~~
-
-#### Mujoco
-
-* Run GAIL w/ PAGAR to obtain `Protagonist_GAIL`
-
-   * Navigate to [mujoco/pgail](https://github.com/zwc662/PAGAR/tree/main/mujoco/pgail) folder.
- 
-* Or run VAIL w/ PAGAR to obtain `Protagonist_GAIL`
-
-   * Navigate to [mujoco/pvail](https://github.com/zwc662/PAGAR/tree/main/mujoco/pvail) folder.
-
-* Run the following command with $ENV_NAME being `Hopper-v2` or `HalfCheetah-v2`, etc.
-
-   ~~~
-   python main.py --env_name $ENV_NAME
+### 3. Run Algorithm 
+* (If using docker) Run `sudo docker run -it -p 6006:6006 --entrypoint /bin/bash pagar` to open docker's shell.
+* Set the following environment variables by `export VARIABLE_NAME=VARIABLE_VALUE`
+   * `ENV`: specifies the benchmark environment; its variable value can be `minigrid` or `mujoco`
+   * `TASK`:  specifies the task
+      - If `ENV=minigrid`, then its variable value can be `MiniGrid-DoorKey-6x6-v0`, `MiniGrid-SimpleCrossingS9N1-v0`, `MiniGrid-SimpleCrossingS9N2-v0`, `MiniGrid-SimpleCrossingS9N3-v0`.
+      - If `ENV=mujoco`, then its variable value can be `Hopper-v2`, `Walker2d-v2`, `HalfCheetah-v2`, `InvertedPendulum-v2`, `Swimmer-v2`
+   * `ALG`: specifies the algorithm; its variable value can be `pgail` to obtain protagonist_gail, or `pvail` to obtain protagonist_vail.
+* Run script `./run.sh $ENV $TASK $ALG` to train the policies
 
 ### 4. Tensorboard
 
-Note that the results of trainings are automatically saved in `logs` folder. TensorboardX is the Tensorboard-like visualization tool for Pytorch.
+Note that the results of trainings are automatically saved in `logs` folder. TensorboardX is the Tensorboard-like visualization tool for Pytorch. 
 
-For example, navigate to the `mujoco/pgail` or `minigrid/pgail-starter-files` folder to visualize the training process of `Protagonist_GAIL`.
-
-~~~
-tensorboard --logdir logs
-~~~
- 
+To visualize the return/iter or return/frame curve, open the browser and go to the url http://localhost:6006
