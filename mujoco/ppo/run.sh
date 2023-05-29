@@ -1,0 +1,9 @@
+#python main.py --env_name 'Hopper-v2' && python test.py --env_name 'Hopper-v2' --load_model 'ckpt_Hopper-v2.pth.tar' --at_least 2500 && cp 'expert_demo_Hopper-v2.p' ../expert_demo/ &&
+#python main.py --env_name 'Walker2d-v2' && python test.py --env_name 'Walker2d-v2' --load_model 'ckpt_Walker2d-v2.pth.tar' --at_least 3000 && cp 'expert_demo_Walker2d-v2.p' ../expert_demo/ &&
+#cd ../ppo && python main.py --env_name 'InvertedPendulum-v2' && python test.py --env_name 'InvertedPendulum-v2' --load_model 'ckpt_InvertedPendulum-v2.pth.tar' --at_least 1000 && cp 'expert_demo_InvertedPendulum-v2.p' ../expert_demo/ &&
+#cd ../ppo && python main.py --env_name 'HalfCheetah-v2' && python test.py --env_name 'HalfCheetah-v2' --load_model 'ckpt_HalfCheetah-v2.pth.tar' --at_least 1750 && cp 'expert_demo_HalfCheetah-v2.p' ../expert_demo/ &&
+#cd ../ppo && python main.py --env_name 'Swimmer-v2' && python test.py --env_name 'Swimmer-v2' --load_model 'ckpt_Swimmer-v2.pth.tar' --at_least 100 && cp 'expert_demo_Swimmer-v2.p' ../expert_demo/ &&
+python main.py --env_name 'HumanoidStandup-v2' && python test.py --env_name 'HumanoidStandup-v2' --load_model 'ckpt_HumanoidStandup-v2.pth.tar' --at_least 6000 && cp 'expert_HumanoidStandup-v2.p' ../expert_demo/ &&
+#(fail) python main.py --env_name 'Humanoid-v2' && python test.py --env_name 'Humanoid-v2' --load_model 'ckpt_Humanoid-v2.pth.tar' --at_least 6000 && cp 'expert_Humanoid-v2.p' ../expert_demo/ &&
+#(fail) cd ../ppo && python main.py --env_name 'Reacher-v2' && python test.py --env_name 'Reacher-v2' --load_model 'ckpt_Reacher-v2.pth.tar' --at_least -20 && cp 'expert_demo_Reacher-v2.p' ../expert_demo/ &&
+#(fail)cd ../ppo && python main.py --env_name 'Ant-v2' && python test.py --env_name 'Ant-v2' --load_model 'ckpt_Ant-v2.pth.tar' --at_least 2000 && cp 'expert_demo_Ant-v2.p' ../expert_demo/
