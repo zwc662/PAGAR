@@ -99,9 +99,9 @@ six==1.13.0
 smmap2==2.0.5
 tensorboard==1.14.0
 tensorboardX==2.4
-tensorflow==1.14.0
+#tensorflow==1.14.0
 tensorflow-estimator==1.14.0
-tensorflow-gpu==1.14.0
+#tensorflow-gpu==1.14.0
 termcolor==1.1.0
 threadpoolctl==2.2.0
 #tokenizers==0.12.1
