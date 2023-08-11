@@ -2,7 +2,7 @@ Cython==0.29.32
 absl-py==0.13.0
 aiohttp==3.8.3
 aiosignal==1.2.0
-antlr4-python3-runtime==4.8
+#antlr4-python3-runtime==4.8
 appdirs==1.4.4
 array2gif==1.0.4
 astor==0.8.1
@@ -41,8 +41,8 @@ gym-minigrid==1.0.1
 #gym-super-mario-bros==7.3.0
 h5py==3.1.0
 #huggingface-hub==0.4.0
-Hydra==2.5
-hydra-core==1.0
+#Hydra==2.5
+#hydra-core==1.0
 identify==1.4.19
 idna==3.4
 idna-ssl==1.1.0
@@ -65,7 +65,7 @@ nes-py==8.1.1
 nodeenv==1.4.0
 numpy==1.19.5
 olefile==0.46
-omegaconf==2.3.0
+#omegaconf==2.3.0
 opencv-python==4.5.1.48
 packaging==21.0
 pandas==1.1.5
