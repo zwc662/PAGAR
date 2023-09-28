@@ -20,6 +20,6 @@ then
     #tensorboard --logdir ./logs 
 else
     tensorboard --logdir logs &
-    python main.py --env_name $task
+    python main.py --env_name ${task}
     #tensorboard --logdir ./logs 
 fi
