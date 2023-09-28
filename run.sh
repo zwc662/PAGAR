@@ -13,7 +13,7 @@ then
     tensorboard --logdir scripts/logs &
     if [ $task != 'MiniGrid-DoorKey-6x6-v0' ];
     then
-        python -m scripts.train --env $task --no-cuda --entropy --demonstration ../expert_demo/expert_demo_$task-v0_($demos)ep.p
+        python -m scripts.train --env $task --no-cuda --entropy --demonstration ../expert_demo/expert_demo_$task-v0_${demos}ep.p
     else
         python -m scripts.train --env $task --no-cuda --demonstration ../expert_demo/expert_demo_$task-v0_($demos)ep.p
     fi
