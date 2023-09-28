@@ -87,6 +87,12 @@ if __name__ == "__main__":
     commit_id = git.Repo(search_parent_directories=True).head.object.hexsha
     default_model_name = f"{args.env}_{args.algo}_seed{args.seed}_{commit_id}" 
 
+    if 'FourRooms' in args.env:
+        args.irl_c = 0.8
+    elif args.irl_c is None:
+        args.irl_c = 1.2
+    else:
+        args.irl_c = None
     
     model_name = (args.model or default_model_name)
 
@@ -176,7 +182,7 @@ if __name__ == "__main__":
     # Load algo
     
     algo = PGAILAlgo(protagonist_envs, antagonist_envs, protagonist_acmodel, antagonist_acmodel, discmodel, device, args.frames_per_proc, args.discount, args.lr, args.gae_lambda,
-                            args.entropy_coef, args.value_loss_coef, args.max_grad_norm, args.ac_recurrence, args.disc_recurrence,
+                            args.entropy_coef, args.value_loss_coef, args.max_grad_norm, args.irl_c, args.ac_recurrence, args.disc_recurrence,
                             args.optim_eps, args.clip_eps, args.epochs, args.batch_size, pair_coef = args.pair_coef, preprocess_obss=preprocess_obss, entropy_reward = args.entropy)
     
     if "protagonist_optimizer_state" in status:

@@ -18,7 +18,7 @@ class PVAILAlgo(BaseAlgo):
     """The Proximal Policy Optimization algorithm
     ([Schulman et al., 2015](https://arxiv.org/abs/1707.06347))."""
     def __init__(self, protagonist_envs, antagonist_envs, protagonist_acmodel, antagonist_acmodel, discmodel, device=None, num_frames_per_proc=None, discount=0.99, lr=0.001, gae_lambda=0.95,
-                 i_c = 0.5, alpha_beta = 1e-4,
+                 i_c = 0.5, alpha_beta = 1e-4, irl_c = None,
                  entropy_coef=0.01, value_loss_coef=0.5, max_grad_norm=0.5, ac_recurrence=4, disc_recurrence = 4,
                  adam_eps=1e-8, clip_eps=0.2, epochs=4, batch_size=256, pair_coef = 1.e-3, preprocess_obss=None,
                  reshape_reward=None, entropy_reward = False):
@@ -30,6 +30,7 @@ class PVAILAlgo(BaseAlgo):
 
         self.i_c = i_c
         self.alpha_beta = alpha_beta
+        self.irl_c = irl_c
         self.beta = 0
         self.pair_coef = pair_coef
         self.clip_eps = clip_eps
@@ -337,8 +338,7 @@ class PVAILAlgo(BaseAlgo):
                     loss = criterion(antagonist_exps_learner, torch.ones((antagonist_exps_learner.shape[0], 1)).to(self.device)) + \
                         criterion(demos_learner, torch.zeros((demos_learner.shape[0], 1)).to(self.device)) + \
                             self.beta * bottleneck_loss
-                    # Update batch values
-
+                    
                    
                     batch_irl_loss += loss
                     # Update memories for next epoch
@@ -348,50 +348,52 @@ class PVAILAlgo(BaseAlgo):
                         protagonist_exps.disc_memory[protagonist_exps_inds + i + 1] = protagonist_exps_memory.detach()
                         demos.disc_memory[demos_inds +i + 1] = demos_memory.detach()
                     
-                    
-                    pair_r1 = - ((protagonist_exps_sb.log_prob_.exp() / protagonist_exps_learner - protagonist_exps_sb.log_prob_.exp()).log())
-                     
-                    pair_ratio1 = torch.exp(protagonist_exps_sb.log_prob_ - protagonist_exps_sb.log_prob).detach()
-                    #print(pair_ratio1)
-                    pair_loss1 = (pair_r1 * pair_ratio1)
-                    pair_loss1 = pair_loss1[torch.isfinite(pair_loss1)].mean() 
-                    pair_tv1 = torch.square((protagonist_exps_sb.logits.exp() - protagonist_exps_sb.logits_.exp()).abs().sum(dim = 1).mean()).detach().item()
-                    pair_loss1 = pair_loss1 + pair_tv1 * 4 * self.discount / (1 - self.discount) * torch.abs(pair_r1.flatten()).max()
-                    pair_loss1 = pair_loss1 - pair_r1[torch.isfinite(pair_r1)].mean()
+                    # Update batch values
+                    if True or (torch.mean(torch.tensor(antagonist_exps_acc) >= 0.5) >= 0.8 and torch.mean(torch.tensor(demos_acc) <= 0.5) >= 0.8):
+ 
+                        pair_r1 = - ((protagonist_exps_sb.log_prob_.exp() / protagonist_exps_learner - protagonist_exps_sb.log_prob_.exp()).log())
+                        
+                        pair_ratio1 = torch.exp(protagonist_exps_sb.log_prob_ - protagonist_exps_sb.log_prob).detach()
+                        #print(pair_ratio1)
+                        pair_loss1 = (pair_r1 * pair_ratio1)
+                        pair_loss1 = pair_loss1[torch.isfinite(pair_loss1)].mean() 
+                        pair_tv1 = torch.square((protagonist_exps_sb.logits.exp() - protagonist_exps_sb.logits_.exp()).abs().sum(dim = 1).mean()).detach().item()
+                        pair_loss1 = pair_loss1 + pair_tv1 * 4 * self.discount / (1 - self.discount) * torch.abs(pair_r1.flatten()).max()
+                        pair_loss1 = pair_loss1 - pair_r1[torch.isfinite(pair_r1)].mean()
 
-                    pair_r2 = (torch.clamp(antagonist_exps_sb.log_prob_.exp() / antagonist_exps_learner - antagonist_exps_sb.log_prob_.exp(), min = 1e-6).log())
-                    pair_ratio2 = torch.exp(antagonist_exps_sb.log_prob_ - antagonist_exps_sb.log_prob).detach()
-                    pair_loss2 = (pair_r2 * pair_ratio2)
-                    pair_loss2 = pair_loss2[torch.isfinite(pair_loss2)].mean() 
-                    pair_tv2 = torch.square((antagonist_exps_sb.logits.exp() - antagonist_exps_sb.logits_.exp()).abs().sum(dim=1).mean()).detach().item()
-                    pair_loss2 = pair_loss2 - pair_tv2 * 4 * self.discount / (1 - self.discount) * torch.abs(pair_r2.flatten()).max()
-                    pair_loss2 = pair_loss2 - pair_r2[torch.isfinite(pair_r2)].mean() 
-                    
-                    pair_ratio3 = (torch.exp(pair_r2 - antagonist_exps_sb.log_prob.detach()))
-                    pair_ids3 = (pair_ratio3 <=  1. + self.clip_eps).float() * (pair_ratio3 >=  1. - self.clip_eps).float()
-                    pair_clipped_ratio3 = pair_ratio3 * pair_ids3.detach()
-                    pair_loss3 = - (pair_r2 * pair_clipped_ratio3)
-                    pair_loss3 = pair_loss3[torch.isfinite(pair_loss3)].sum() / pair_ids3[torch.isfinite(pair_loss3)].sum()
-                    pair_loss3 = pair_loss3 - pair_r1[torch.isfinite(pair_r1)].mean()
+                        pair_r2 = (torch.clamp(antagonist_exps_sb.log_prob_.exp() / antagonist_exps_learner - antagonist_exps_sb.log_prob_.exp(), min = 1e-6).log())
+                        pair_ratio2 = torch.exp(antagonist_exps_sb.log_prob_ - antagonist_exps_sb.log_prob).detach()
+                        pair_loss2 = (pair_r2 * pair_ratio2)
+                        pair_loss2 = pair_loss2[torch.isfinite(pair_loss2)].mean() 
+                        pair_tv2 = torch.square((antagonist_exps_sb.logits.exp() - antagonist_exps_sb.logits_.exp()).abs().sum(dim=1).mean()).detach().item()
+                        pair_loss2 = pair_loss2 - pair_tv2 * 4 * self.discount / (1 - self.discount) * torch.abs(pair_r2.flatten()).max()
+                        pair_loss2 = pair_loss2 - pair_r2[torch.isfinite(pair_r2)].mean() 
+                        
+                        pair_ratio3 = (torch.exp(pair_r2 - antagonist_exps_sb.log_prob.detach()))
+                        pair_ids3 = (pair_ratio3 <=  1. + self.clip_eps).float() * (pair_ratio3 >=  1. - self.clip_eps).float()
+                        pair_clipped_ratio3 = pair_ratio3 * pair_ids3.detach()
+                        pair_loss3 = - (pair_r2 * pair_clipped_ratio3)
+                        pair_loss3 = pair_loss3[torch.isfinite(pair_loss3)].sum() / pair_ids3[torch.isfinite(pair_loss3)].sum()
+                        pair_loss3 = pair_loss3 - pair_r1[torch.isfinite(pair_r1)].mean()
 
-                    pair_ratio4 = (torch.exp(- pair_r1 - protagonist_exps_sb.log_prob.detach()))
-                    pair_ids4 = (pair_ratio4 <=  1. + self.clip_eps).float() * (pair_ratio4 >=  1. - self.clip_eps).float()
-                    pair_clipped_ratio4 = pair_ratio4 * pair_ids4.detach()
-                    pair_loss4 =  - (pair_r1 * pair_clipped_ratio4)
-                    pair_loss4 = pair_loss4[torch.isfinite(pair_loss4)].sum() / pair_ids4[torch.isfinite(pair_loss4)].sum()  
-                    pair_loss4 = pair_loss4 - pair_r2[torch.isfinite(pair_r1)].mean()  
+                        pair_ratio4 = (torch.exp(- pair_r1 - protagonist_exps_sb.log_prob.detach()))
+                        pair_ids4 = (pair_ratio4 <=  1. + self.clip_eps).float() * (pair_ratio4 >=  1. - self.clip_eps).float()
+                        pair_clipped_ratio4 = pair_ratio4 * pair_ids4.detach()
+                        pair_loss4 =  - (pair_r1 * pair_clipped_ratio4)
+                        pair_loss4 = pair_loss4[torch.isfinite(pair_loss4)].sum() / pair_ids4[torch.isfinite(pair_loss4)].sum()  
+                        pair_loss4 = pair_loss4 - pair_r2[torch.isfinite(pair_r2)].mean()  
 
-                    r = (demos_sb.antagonist_log_prob.exp().flatten() /demos_learner.flatten() - demos_sb.antagonist_log_prob.exp().flatten()).log()
-                    ratio = ((demos_sb.antagonist_log_prob.exp() - demos_sb.protagonist_log_prob.exp()).flatten().detach()) 
-                    #pair_loss0 =  (r * ratio)
-                    #ratio = (protagonist_expert_learner - antagonist_expert_learner).detach()  / r.exp().detach()
-                    pair_loss0 =  (r * ratio)[ratio < 0]
-                    pair_loss0 = - pair_loss0[torch.isfinite(pair_loss0)].log().mean().exp()
-                    
-                    pair_loss = pair_loss1 + pair_loss2 #+ (pair_loss3 if torch.isfinite(pair_loss3).all() else 0.) + (pair_loss4 if torch.isfinite(pair_loss4).all() else 0.) 
-                    #print(pair_loss1, pair_loss2, pair_loss3, pair_loss0)
-                    batch_pair_loss += pair_loss
-            
+                        r = (demos_sb.antagonist_log_prob.exp().flatten() /demos_learner.flatten() - demos_sb.antagonist_log_prob.exp().flatten()).log()
+                        ratio = ((demos_sb.antagonist_log_prob.exp() - demos_sb.protagonist_log_prob.exp()).flatten().detach()) 
+                        #pair_loss0 =  (r * ratio)
+                        #ratio = (protagonist_expert_learner - antagonist_expert_learner).detach()  / r.exp().detach()
+                        pair_loss0 =  (r * ratio)[ratio < 0]
+                        pair_loss0 = - pair_loss0[torch.isfinite(pair_loss0)].log().mean().exp()
+                        
+                        pair_loss = pair_loss1 + pair_loss2 #+ (pair_loss3 if torch.isfinite(pair_loss3).all() else 0.) + (pair_loss4 if torch.isfinite(pair_loss4).all() else 0.) 
+                        #print(pair_loss1, pair_loss2, pair_loss3, pair_loss0)
+                        batch_pair_loss += pair_loss
+                
                 
                 # Update batch values
                 
@@ -400,7 +402,10 @@ class PVAILAlgo(BaseAlgo):
                 # Update actor-critic
 
                 self.disc_optimizer.zero_grad()
-                self.pair_coef = self.pair_coef * np.exp((- batch_irl_loss.detach().cpu().numpy().item() + 1.))
+                
+                if self.irl_c is not None:
+                    self.pair_coef = self.pair_coef * np.exp((- batch_irl_loss.detach().cpu().numpy().item() + self.irl_c))
+                
                 (batch_pair_loss * self.pair_coef + batch_irl_loss).backward()
                 grad_norm = sum(p.grad.data.norm(2).item() ** 2 for p in self.discmodel.parameters()) ** 0.5
                 clip_grad_value(self.discmodel.parameters(), self.max_grad_norm)

@@ -15,7 +15,7 @@ class PGAILAlgo(BaseAlgo):
     """The Proximal Policy Optimization algorithm
     ([Schulman et al., 2015](https://arxiv.org/abs/1707.06347))."""
     def __init__(self, protagonist_envs, antagonist_envs, protagonist_acmodel, antagonist_acmodel, discmodel, device=None, num_frames_per_proc=None, discount=0.99, lr=0.001, gae_lambda=0.95,
-                 entropy_coef=0.01, value_loss_coef=0.5, max_grad_norm=0.5, ac_recurrence=4, disc_recurrence = 4,
+                 entropy_coef=0.01, value_loss_coef=0.5, irl_c = None, max_grad_norm=0.5, ac_recurrence=4, disc_recurrence = 4,
                  adam_eps=1e-8, clip_eps=0.2, epochs=4, batch_size=256, pair_coef = 1.e-3, preprocess_obss=None,
                  reshape_reward=None, entropy_reward = False):
         
@@ -28,7 +28,7 @@ class PGAILAlgo(BaseAlgo):
         self.clip_eps = clip_eps
         self.epochs = epochs
         self.batch_size = batch_size
-
+        self.irl_c = irl_c
         
         assert self.batch_size % self.antagonist_ac_recurrence == 0 and self.batch_size % self.protagonist_ac_recurrence == 0 and self.batch_size % self.disc_recurrence == 0
         
@@ -354,7 +354,7 @@ class PGAILAlgo(BaseAlgo):
                     pair_clipped_ratio4 = pair_ratio4 * pair_ids4.detach()
                     pair_loss4 =  - (pair_r1 * pair_clipped_ratio4)
                     pair_loss4 = pair_loss4[torch.isfinite(pair_loss4)].sum() / pair_ids4[torch.isfinite(pair_loss4)].sum()  
-                    pair_loss4 = pair_loss4 - pair_r2[torch.isfinite(pair_r1)].mean()  
+                    pair_loss4 = pair_loss4 - pair_r2[torch.isfinite(pair_r2)].mean()  
 
                     r = (demos_sb.antagonist_log_prob.exp().flatten() /demos_learner.flatten() - demos_sb.antagonist_log_prob.exp().flatten()).log()
                     ratio = ((demos_sb.antagonist_log_prob.exp() - demos_sb.protagonist_log_prob.exp()).flatten().detach()) 
@@ -363,7 +363,7 @@ class PGAILAlgo(BaseAlgo):
                     pair_loss0 =  (r * ratio)[ratio < 0]
                     pair_loss0 = - pair_loss0[torch.isfinite(pair_loss0)].log().mean().exp()
                     
-                    pair_loss = pair_loss1 + pair_loss2 + (pair_loss3 if torch.isfinite(pair_loss3).all() else 0.)# + (pair_loss4 if torch.isfinite(pair_loss4).all() else 0.) 
+                    pair_loss = pair_loss1 + pair_loss2 + (pair_loss3 if torch.isfinite(pair_loss3).all() else 0.) + (pair_loss4 if torch.isfinite(pair_loss4).all() else 0.) 
                     #print(pair_loss1, pair_loss2, pair_loss3, pair_loss0)
                     batch_pair_loss += pair_loss
             
@@ -375,7 +375,9 @@ class PGAILAlgo(BaseAlgo):
                 # Update actor-critic
 
                 self.disc_optimizer.zero_grad()
-                #self.pair_coef = self.pair_coef * np.exp((- batch_irl_loss.detach().cpu().numpy().item() + 1.2))
+                if self.irl_c is not None:
+                    self.pair_coef = self.pair_coef * np.exp((- batch_irl_loss.detach().cpu().numpy().item() + self.irl_c))
+                
                 (batch_pair_loss * self.pair_coef + batch_irl_loss).backward()
                 grad_norm = sum(p.grad.data.norm(2).item() ** 2 for p in self.discmodel.parameters()) ** 0.5
                 clip_grad_value(self.discmodel.parameters(), self.max_grad_norm)
