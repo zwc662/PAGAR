@@ -19,10 +19,11 @@ This repository contains PyTorch (v0.4.1) implementations of **Imitation Learnin
 * Set the following environment variables by `export VARIABLE_NAME=VARIABLE_VALUE`
    * `ENV`: specifies the benchmark environment; its variable value can be `minigrid` or `mujoco`
    * `TASK`:  specifies the task
-      - If `ENV=minigrid`, then its variable value can be `MiniGrid-DoorKey-6x6-v0`, `MiniGrid-SimpleCrossingS9N1-v0`, `MiniGrid-SimpleCrossingS9N2-v0`, `MiniGrid-SimpleCrossingS9N3-v0`.
+      - If `ENV=minigrid`, then its variable value can be `MiniGrid-DoorKey-6x6-v0`, `MiniGrid-SimpleCrossingS9N1-v0`, `MiniGrid-SimpleCrossingS9N2-v0`, `MiniGrid-SimpleCrossingS9N3-v0` `MiniGrid-FourRooms-v0`.
       - If `ENV=mujoco`, then its variable value can be `Hopper-v2`, `Walker2d-v2`, `HalfCheetah-v2`, `InvertedPendulum-v2`, `Swimmer-v2`
    * `ALG`: specifies the algorithm; its variable value can be `pgail` to obtain protagonist_gail, or `pvail` to obtain protagonist_vail.
-* Run script `./run.sh $ENV $TASK $ALG` to train the policies
+   * `DEMOS`: specifies the number of demonstrations (only for minigrid tasks).
+* Run script `./run.sh $ENV $TASK $ALG $DEMOS` to train the policies
 
 ### 4. Tensorboard
 
