@@ -78,6 +78,8 @@ parser.add_argument("--disc-recurrence", type=int, default=1,
                     help="number of time-steps gradient is backpropagated (default: 1). If > 1, a LSTM is added to the model to have memory.")
 parser.add_argument("--text", action="store_true", default=False,
                     help="add a GRU to the model to handle text input")
+parser.add_argument('--irl-c', type=float, default=None,
+                    help='lower than baseline increase pair coef')
 
 if __name__ == "__main__":
     args = parser.parse_args()
