@@ -1,0 +1,20 @@
+# @package _global_
+
+protagonist:
+  name: softq
+  class: agent.softq.SoftQ
+  obs_dim: ??? # to be specified later
+  action_dim: ??? # to be specified later
+
+  critic_cfg: ${protagonist_q_net}
+  critic_lr: 1e-4
+  critic_betas: [0.9, 0.999]
+ 
+  init_temp: 0.01
+  critic_target_update_frequency: 4
+  critic_tau: 0.1
+
+protagonist_q_net:
+  _target_: agent.softq_models.SimpleQNetwork
+  obs_dim: ${protagonist.obs_dim}
+  action_dim: ${protagonist.action_dim}
